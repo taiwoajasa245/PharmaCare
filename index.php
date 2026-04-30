@@ -47,8 +47,7 @@ $error = $_GET['error'] ?? '';
 
     <div class="topbar">
       <span>Have an account?</span>
-      <button class="btn-outline">Login</button>
-      <!-- id="modeToggle" is what login.js looks for -->
+      <button class="btn-outline" id="openLoginModal">Login</button>
       <button class="btn-toggle" id="modeToggle">☀️ Light mode</button>
     </div>
     <div class="screens">
@@ -94,7 +93,7 @@ $error = $_GET['error'] ?? '';
       <h1>Enter your password</h1>
       <p class="subtitle" id="passSub">Signing in as Pharmacist</p>
       
-      <form action="auth/login.php" method="POST">
+      <form action="#" method="POST" onsubmit="event.preventDefault(); syncHiddenFields(); goTo(3);">
         <input type="hidden" name="email" id="emailField"/>
         <input type="hidden" name="role" id="roleField" value="pharmacist"/>
         
@@ -105,7 +104,7 @@ $error = $_GET['error'] ?? '';
           <div class="error-msg"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         
-        <button type="submit" class="btn-submit" onclick="syncHiddenFields()">Sign In</button>
+        <button type="submit" class="btn-submit">Sign In</button>
       </form>
       
       <button class="btn-back" onclick="goTo(1)">← Back</button>
@@ -122,6 +121,14 @@ $error = $_GET['error'] ?? '';
       </div>
       <h1>Welcome to PharmaCare</h1>
       <p class="subtitle" id="successSub">Loading your dashboard...</p>
+      <button
+        type="button"
+        class="btn-submit"
+        style="margin-top: 8px;"
+        onclick="window.location.href='pages/dashboard.php'"
+      >
+        Go to dashboard ↗
+      </button>
     </div>
   </div>
 </div>
@@ -136,5 +143,7 @@ $error = $_GET['error'] ?? '';
 </div>
 
 <script src="assets/js/login.js"></script>
+<script src="assets/js/modal.js"></script>
+<?php include 'includes/login_modal.php'; ?>
 </body>
 </html>

@@ -37,6 +37,31 @@ document.addEventListener('DOMContentLoaded', function () {
     screens[currentStep].classList.add('active');
     sideSteps[currentStep].classList.add('active');
     sideSteps[currentStep].classList.remove('done');
+
+
+  window.syncHiddenFields = function () {
+    const emailInput = document.getElementById('emailInput');
+    const emailField = document.getElementById('emailField');
+    const roleField = document.getElementById('roleField');
+
+    if (emailInput && emailField) {
+      emailField.value = emailInput.value;
+    }
+
+    if (roleField) {
+      roleField.value = selectedRole;
+    }
+  };
+    // Keep step numbers visible as numbers until completed.
+    sideSteps.forEach(function (step, index) {
+      const num = step.querySelector('.step-num');
+      if (!num) return;
+      if (step.classList.contains('done')) {
+        num.innerHTML = '✓';
+      } else {
+        num.textContent = String(index + 1);
+      }
+    });
   };
 
   // ── Role card selection ──

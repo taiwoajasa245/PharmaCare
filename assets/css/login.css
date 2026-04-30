@@ -79,6 +79,7 @@ body {
   gap: 12px;
   padding: 10px 0;
   position: relative;
+  color: #fff;
 }
 
 .step::after {
@@ -88,7 +89,7 @@ body {
   top: 38px;
   width: 1px;
   height: 20px;
-  background: var(--border);
+  background: rgba(255, 255, 255, 0.22);
 }
 
 .step:last-child::after {
@@ -99,13 +100,13 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 1px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  color: var(--muted);
-  background: var(--bg);
+  color: #fff;
+  background: transparent;
   flex-shrink: 0;
   z-index: 1;
 }
@@ -117,25 +118,46 @@ body {
 }
 
 .step.active {
-  background: var(--bg3);
+  background: var(--accent);
   border-radius: 10px;
   padding: 10px 12px;
   margin: 0 -12px;
 }
 
 .step.active .step-num {
-  border-color: var(--text);
-  color: var(--text);
+  border-color: #fff;
+  color: #fff;
 }
 
 .step-name {
   font-size: 13px;
-  color: var(--muted);
+  color: #fff;
 }
 
 .step.active .step-name {
-  color: var(--text);
+  color: #fff;
   font-weight: 500;
+}
+
+.step.done .step-name {
+  color: #fff;
+}
+
+.step.done .step-num {
+  position: relative;
+  font-size: 0;
+}
+
+.step.done .step-num::before {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
 }
 
 /* ── Main panel ── */
@@ -506,4 +528,65 @@ input::placeholder {
   max-width: 500px;  
   margin: 0 auto;
 }
+
+/* ── Modal styles ── */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+.modal.open { display: flex; }
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(2px);
+}
+.modal-content {
+  position: relative;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.modal-body { text-align: center; }
+.modal-logo { margin-bottom: 10px; }
+.modal-logo .logo { font-size: 16px; font-weight: 600; letter-spacing: 0.08em; }
+.modal-body h2 { margin: 6px 0 6px; font-size:18px; color:var(--text); }
+.modal-form { margin-top: 12px; display:flex; flex-direction:column; gap:10px; align-items: center; }
+.modal-form input[type="email"], .modal-form input[type="password"] { padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg3); color:var(--text); width:100%; max-width:360px; }
+.modal-form .btn-submit { margin-top:6px; width:100%; max-width:360px; }
+
+/* Keep field labels left-aligned while form is centered */
+.modal-form .field-label {
+  align-self: flex-start;
+  text-align: left;
+  width: 100%;
+  max-width: 360px;
+  margin-left: 0;
+  margin-bottom: 6px;
+  color: var(--sub);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
 
