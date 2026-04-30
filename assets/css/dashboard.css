@@ -87,6 +87,7 @@ body.light-mode {
   font-size: 13px;
   color: var(--color-text-secondary, #374151);
   margin-bottom: 2px;
+  text-decoration: none;
 }
 
 .nav-item:hover {
@@ -97,6 +98,14 @@ body.light-mode {
   background: var(--color-background-secondary, #f3f4f6);
   color: var(--color-text-primary, #111827);
   font-weight: 500;
+}
+
+.nav-action {
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  font: inherit;
 }
 
 .nav-icon {
@@ -111,11 +120,17 @@ body.light-mode {
 }
 
 .nav-user {
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
   border-top: 0.5px solid var(--color-border-tertiary, #e5e7eb);
   padding-top: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
+  text-align: left;
 }
 
 .avatar {
@@ -191,6 +206,12 @@ body.light-mode {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 0.5px solid var(--color-border-secondary);
 }
 
 .mode-btn {
@@ -369,6 +390,150 @@ body.light-mode {
   position: relative;
   width: 100%;
   height: 200px;
+}
+
+/* Dashboard modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.58);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(92vw, 520px);
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.modal-field label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--color-text-tertiary);
+}
+
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
+  width: 100%;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+  color: var(--color-text-primary);
+  border-radius: 12px;
+  padding: 11px 12px;
+  font: inherit;
+  outline: none;
+}
+
+.modal-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.modal-link-btn {
+  background: transparent;
+  border: 0.5px solid var(--color-border-secondary);
+  color: var(--color-text-primary);
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.modal-danger {
+  background: var(--color-background-danger);
+  border-color: var(--color-background-danger);
+  color: var(--color-text-danger);
+}
+
+.modal-profile {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.profile-badge {
+  width: 72px;
+  height: 72px;
+  border-radius: 100%;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 720px) {
+  .modal-grid,
+  .modal-profile {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .topbar-right {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
 }
 
 #stockChart {

@@ -104,5 +104,7 @@ session_start();
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <script src="../assets/js/dashboard.js"></script>
+  <script src="../assets/js/dashboard-actions.js"></script>
+  <?php include '../includes/dashboard_modals.php'; ?>
 </body>
 </html>

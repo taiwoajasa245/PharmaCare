@@ -1,21 +1,34 @@
 document.addEventListener('DOMContentLoaded', function () {
   const modeBtn = document.getElementById('modeBtn');
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const themeKey = 'pharmacare-theme';
 
   function syncModeButton() {
     if (!modeBtn) return;
     modeBtn.textContent = document.body.classList.contains('light-mode') ? '🌙 Dark' : '☀ Light';
   }
 
-  if (prefersDark) {
-    document.body.classList.remove('light-mode');
+  function applyTheme(theme) {
+    document.body.classList.toggle('light-mode', theme === 'light');
   }
+
+  function getPreferredTheme() {
+    const savedTheme = localStorage.getItem(themeKey);
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme;
+    }
+
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  applyTheme(getPreferredTheme());
   syncModeButton();
 
   window.toggleMode = function () {
-    document.body.classList.toggle('light-mode');
+    const nextTheme = document.body.classList.contains('light-mode') ? 'dark' : 'light';
+    localStorage.setItem(themeKey, nextTheme);
+    applyTheme(nextTheme);
     syncModeButton();
-  };
+  }
 
   const chartEl = document.getElementById('stockChart');
   if (chartEl && window.Chart) {

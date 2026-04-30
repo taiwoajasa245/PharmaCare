@@ -22,7 +22,7 @@
 
         <input type="hidden" name="role" value="pharmacist" />
 
-        <button type="submit" class="btn-submit">Sign In</button>
+        <button type="submit" class="btn-submit">Sign </button>
       </form>
     </div>
   </div>
