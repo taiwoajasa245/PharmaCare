@@ -13,7 +13,7 @@ export PHARMA_DB_NAME="${PHARMA_DB_NAME:-pharmacare}"
 export PHARMA_DB_USER="${PHARMA_DB_USER:-root}"
 export PHARMA_DB_PASS="${PHARMA_DB_PASS:-}"
 
-APP_PORT="${PHARMA_APP_PORT:-8080}"
+APP_PORT="${PHARMA_APP_PORT:-8081}"
 
 echo "Starting PharmaCare on 0.0.0.0:${APP_PORT}"
 echo "Press Ctrl+C to stop."

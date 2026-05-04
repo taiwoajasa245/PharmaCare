@@ -113,6 +113,51 @@ body.light-mode {
 .rx-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .note-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; }
 .inv-note { font-size: 11px; color: var(--color-text-tertiary); }
+
+.inline-feedback {
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border-secondary);
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+.inline-feedback.is-success {
+  background: var(--color-background-success);
+  color: var(--color-text-success);
+}
+
+.inline-feedback.is-error {
+  background: var(--color-background-danger);
+  color: var(--color-text-danger);
+}
+
+.btn-add.is-loading,
+.chip-btn.is-loading {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: currentColor;
+  animation: pt-spin 0.8s linear infinite;
+}
+
+body.light-mode .btn-spinner,
+.btn-secondary .btn-spinner,
+.chip-btn .btn-spinner {
+  border-color: rgba(0, 0, 0, 0.18);
+  border-top-color: currentColor;
+}
+
+@keyframes pt-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.58); display: none; align-items: center; justify-content: center; z-index: 1200; }
 .modal-overlay.open { display: flex; }
 .modal-card { width: min(92vw, 640px); background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: 18px; padding: 20px; box-shadow: 0 18px 50px rgba(0,0,0,0.35); max-height: 90vh; overflow-y: auto; }

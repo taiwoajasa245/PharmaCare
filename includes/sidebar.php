@@ -1,6 +1,20 @@
 
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
+$currentUserName = trim((string) ($_SESSION['user_name'] ?? 'Ade Oke'));
+$currentUserRole = trim((string) ($_SESSION['user_role'] ?? 'Pharmacist'));
+
+function userInitials(string $name): string
+{
+	$parts = preg_split('/\s+/', trim($name));
+	$initials = '';
+
+	foreach (array_slice($parts, 0, 2) as $part) {
+		$initials .= strtoupper(substr($part, 0, 1));
+	}
+
+	return $initials ?: 'AO';
+}
 
 function navItemClass(string $pageName, string $currentPage): string
 {
@@ -23,20 +37,16 @@ function navItemClass(string $pageName, string $currentPage): string
 		<svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
 		Patients
 	</a>
-	<a class="<?php echo navItemClass('suppliers.php', $currentPage); ?>" href="suppliers.php">
-		<svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M8 5v6"/></svg>
-		Suppliers
-	</a>
 	<!-- <div class="nav-item nav-action" id="openProfileModal" role="button" tabindex="0">
 		<svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L6 7l3 3 2-3 3 4"/></svg>
 		Profile
 	</div> -->
 	<div class="nav-spacer"></div>
 	<button class="nav-user" type="button" id="openProfileModalSidebar">
-		<div class="avatar">AO</div>
+		<div class="avatar"><?php echo htmlspecialchars(userInitials($currentUserName)); ?></div>
 		<div>
-			<div class="u-name">Ade Oke</div>
-			<div class="u-role">Pharmacist</div>
+			<div class="u-name"><?php echo htmlspecialchars($currentUserName); ?></div>
+			<div class="u-role"><?php echo htmlspecialchars($currentUserRole); ?></div>
 		</div>
 	</button>
 </aside>

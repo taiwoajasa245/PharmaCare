@@ -71,4 +71,4 @@ echo "  export PHARMA_DB_USER=$DB_USER"
 echo "  export PHARMA_DB_PASS=$DB_PASS"
 echo
 echo "Then start your app (example):"
-echo "  php -S 0.0.0.0:8080"
+echo "  php -S 0.0.0.0:8081"

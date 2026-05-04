@@ -16,7 +16,7 @@ require_once __DIR__ . '/../auth/guard.php';
     <div class="body">
       <?php include '../includes/header.php'; ?>
 
-      <div class="scroll">
+      <div class="scroll dashboard-loading" id="dashboardRoot">
         <div class="quick-add">
           <div class="qa-icon">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v14M1 8h14" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
@@ -25,34 +25,34 @@ require_once __DIR__ . '/../auth/guard.php';
             <div class="qa-title">Quick Add Sale</div>
             <div class="qa-sub">Record a new prescription or OTC sale in seconds</div>
           </div>
-          <button class="qa-btn" type="button">Add Sale ↗</button>
+          <button class="qa-btn" type="button" id="openSaleModalQuick">Add Sale ↗</button>
         </div>
 
         <div class="stat-grid">
           <div class="stat-card">
             <div class="stat-label">Total Medicines</div>
-            <div class="stat-val">1,284</div>
-            <div class="stat-sub" style="color:var(--color-text-success, #15803d);">↑ 24 added this week</div>
+            <div class="stat-val" id="statTotalMedicines"><span class="skeleton-line"></span></div>
+            <div class="stat-sub" id="statTotalMedicinesSub" style="color:var(--color-text-success, #15803d);">Loading...</div>
           </div>
           <div class="stat-card warn">
             <div class="stat-label">Low Stock Alerts</div>
-            <div class="stat-val">3</div>
+            <div class="stat-val" id="statLowStockAlerts"><span class="skeleton-line"></span></div>
             <div class="stat-sub" style="color:var(--color-text-warning, #b45309);">Needs restocking</div>
           </div>
           <div class="stat-card danger">
             <div class="stat-label">Expired Medicines</div>
-            <div class="stat-val">7</div>
+            <div class="stat-val" id="statExpiredMedicines"><span class="skeleton-line"></span></div>
             <div class="stat-sub" style="color:var(--color-text-danger, #b91c1c);">Remove from shelf</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Total Patients</div>
-            <div class="stat-val">542</div>
-            <div class="stat-sub" style="color:var(--color-text-tertiary, #6b7280);">↑ 12 this month</div>
+            <div class="stat-val" id="statTotalPatients"><span class="skeleton-line"></span></div>
+            <div class="stat-sub" style="color:var(--color-text-tertiary, #6b7280);">Registered patients</div>
           </div>
           <div class="stat-card info">
-            <div class="stat-label">Total Suppliers</div>
-            <div class="stat-val">18</div>
-            <div class="stat-sub" style="color:var(--color-text-info, #2563eb);">4 orders pending</div>
+            <div class="stat-label">Total Sales</div>
+            <div class="stat-val" id="statTotalSales"><span class="skeleton-line"></span></div>
+            <div class="stat-sub" style="color:var(--color-text-info, #2563eb);">Recorded transactions</div>
           </div>
         </div>
 
@@ -69,35 +69,31 @@ require_once __DIR__ . '/../auth/guard.php';
           <div class="card">
             <div class="card-head">
               <div class="card-title">Recent patients</div>
-              <span class="card-link">View all</span>
+              <a class="card-link" href="patients.php">View all</a>
             </div>
-            <div class="pt-row">
-              <div class="pt-av" style="background:#e6f1fb;color:#0c447c;">FA</div>
-              <div><div class="pt-name">Fatima Abubakar</div><div class="pt-meta">Paracetamol · 2 hrs ago</div></div>
-              <span class="pt-badge" style="background:var(--color-background-success, #dcfce7);color:var(--color-text-success, #15803d);">Dispensed</span>
-            </div>
-            <div class="pt-row">
-              <div class="pt-av" style="background:#faeeda;color:#854f0b;">EO</div>
-              <div><div class="pt-name">Emeka Okonkwo</div><div class="pt-meta">Amoxicillin · 4 hrs ago</div></div>
-              <span class="pt-badge" style="background:var(--color-background-warning, #fef3c7);color:var(--color-text-warning, #b45309);">Pending</span>
-            </div>
-            <div class="pt-row">
-              <div class="pt-av" style="background:#eaf3de;color:#3b6d11;">NK</div>
-              <div><div class="pt-name">Ngozi Kalu</div><div class="pt-meta">Metformin · 6 hrs ago</div></div>
-              <span class="pt-badge" style="background:var(--color-background-success, #dcfce7);color:var(--color-text-success, #15803d);">Dispensed</span>
-            </div>
-            <div class="pt-row">
-              <div class="pt-av" style="background:#fcebeb;color:#a32d2d;">BM</div>
-              <div><div class="pt-name">Bola Mustapha</div><div class="pt-meta">Ibuprofen · Yesterday</div></div>
-              <span class="pt-badge" style="background:var(--color-background-danger, #fee2e2);color:var(--color-text-danger, #b91c1c);">Returned</span>
-            </div>
-            <div class="pt-row">
-              <div class="pt-av" style="background:#eeedfe;color:#3c3489;">CI</div>
-              <div><div class="pt-name">Chinwe Ibe</div><div class="pt-meta">Vitamins · Yesterday</div></div>
-              <span class="pt-badge" style="background:var(--color-background-success, #dcfce7);color:var(--color-text-success, #15803d);">Dispensed</span>
-            </div>
+            <div id="recentPatientsList"></div>
           </div>
         </div>
+
+        <div class="row2">
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Recent sales</div>
+              <span class="card-link" id="openSaleModalLink" role="button" tabindex="0">Add sale</span>
+            </div>
+            <div id="recentSalesList"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title">Low stock medicines</div>
+              <a class="card-link" href="inventory.php">Inventory</a>
+            </div>
+            <div id="lowStockList"></div>
+          </div>
+        </div>
+
+        <div class="inline-feedback" id="dashboardFeedback" aria-live="polite" hidden></div>
       </div>
     </div>
   </div>
@@ -106,5 +102,6 @@ require_once __DIR__ . '/../auth/guard.php';
   <script src="../assets/js/dashboard.js"></script>
   <script src="../assets/js/dashboard-actions.js"></script>
   <?php include '../includes/dashboard_modals.php'; ?>
+  <?php include '../includes/profile_modal.php'; ?>
 </body>
 </html>

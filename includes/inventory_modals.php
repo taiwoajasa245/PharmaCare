@@ -5,37 +5,38 @@
       <button class="modal-close" type="button" data-close="addDrugModal" aria-label="Close">×</button>
     </div>
 
-    <form id="addDrugForm">
+    <form id="addDrugForm" action="../api/inventory.php" method="POST">
+      <input type="hidden" name="action" value="add">
       <div class="modal-grid">
         <div class="modal-field">
           <label for="drugName">Drug Name</label>
-          <input id="drugName" type="text" placeholder="Medicine name" required>
+          <input id="drugName" name="name" type="text" placeholder="Medicine name" required>
         </div>
         <div class="modal-field">
           <label for="drugCategory">Category</label>
-          <input id="drugCategory" type="text" placeholder="Tablets, syrup, etc." required>
+          <input id="drugCategory" name="category" type="text" placeholder="Tablets, syrup, etc." required>
         </div>
       </div>
 
       <div class="modal-grid">
         <div class="modal-field">
           <label for="drugStock">Initial Stock</label>
-          <input id="drugStock" type="number" min="0" placeholder="0" required>
+          <input id="drugStock" name="stock_qty" type="number" min="0" placeholder="0" required>
         </div>
         <div class="modal-field">
           <label for="drugExpiry">Expiry Date</label>
-          <input id="drugExpiry" type="date" required>
+          <input id="drugExpiry" name="expiry_date" type="date" required>
         </div>
       </div>
 
-      <div class="modal-field">
-        <label for="drugSupplier">Supplier</label>
-        <input id="drugSupplier" type="text" placeholder="Supplier name">
-      </div>
+      <input type="hidden" name="reorder_level" value="10">
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="addDrugModal">Cancel</button>
-        <button class="btn-add" type="submit">Save Drug</button>
+        <button class="btn-add" type="submit" data-loading-text="Saving drug...">
+          <span class="btn-label">Save Drug</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>
@@ -48,32 +49,39 @@
       <button class="modal-close" type="button" data-close="editDrugModal" aria-label="Close">×</button>
     </div>
 
-    <form id="editDrugForm">
+    <form id="editDrugForm" action="../api/inventory.php" method="POST">
+      <input type="hidden" name="action" value="update">
+      <input type="hidden" id="editDrugId" name="id">
       <div class="modal-grid">
         <div class="modal-field">
           <label for="editDrugName">Drug Name</label>
-          <input id="editDrugName" type="text" required>
+          <input id="editDrugName" name="name" type="text" required>
         </div>
         <div class="modal-field">
           <label for="editDrugCategory">Category</label>
-          <input id="editDrugCategory" type="text" required>
+          <input id="editDrugCategory" name="category" type="text" required>
         </div>
       </div>
 
       <div class="modal-grid">
         <div class="modal-field">
           <label for="editDrugQty">Stock Qty</label>
-          <input id="editDrugQty" type="number" min="0" required>
+          <input id="editDrugQty" name="stock_qty" type="number" min="0" required>
         </div>
         <div class="modal-field">
           <label for="editDrugExpiry">Expiry Date</label>
-          <input id="editDrugExpiry" type="date" required>
+          <input id="editDrugExpiry" name="expiry_date" type="date" required>
         </div>
       </div>
 
+      <input type="hidden" name="reorder_level" value="10">
+
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="editDrugModal">Cancel</button>
-        <button class="btn-add" type="submit">Update Drug</button>
+        <button class="btn-add" type="submit" data-loading-text="Updating drug...">
+          <span class="btn-label">Update Drug</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>
@@ -86,26 +94,31 @@
       <button class="modal-close" type="button" data-close="stockInModal" aria-label="Close">×</button>
     </div>
 
-    <form id="stockInForm">
+    <form id="stockInForm" action="../api/inventory.php" method="POST">
+      <input type="hidden" name="action" value="stock_in">
+      <input type="hidden" id="stockInDrugId" name="id">
       <div class="modal-grid">
         <div class="modal-field">
           <label for="stockInDrug">Drug</label>
-          <input id="stockInDrug" type="text" placeholder="Medicine name" required>
+          <input id="stockInDrug" type="text" placeholder="Medicine name" required readonly>
         </div>
         <div class="modal-field">
           <label for="stockInQty">Quantity Added</label>
-          <input id="stockInQty" type="number" min="1" required>
+          <input id="stockInQty" name="quantity" type="number" min="1" required>
         </div>
       </div>
 
       <div class="modal-field">
         <label for="stockInNote">Notes</label>
-        <textarea id="stockInNote" placeholder="Delivery note, supplier batch, etc."></textarea>
+        <textarea id="stockInNote" placeholder="Delivery note or batch number"></textarea>
       </div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="stockInModal">Cancel</button>
-        <button class="btn-add" type="submit">Save Stock In</button>
+        <button class="btn-add" type="submit" data-loading-text="Saving stock in...">
+          <span class="btn-label">Save Stock In</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>
@@ -118,15 +131,17 @@
       <button class="modal-close" type="button" data-close="stockOutModal" aria-label="Close">×</button>
     </div>
 
-    <form id="stockOutForm">
+    <form id="stockOutForm" action="../api/inventory.php" method="POST">
+      <input type="hidden" name="action" value="stock_out">
+      <input type="hidden" id="stockOutDrugId" name="id">
       <div class="modal-grid">
         <div class="modal-field">
           <label for="stockOutDrug">Drug</label>
-          <input id="stockOutDrug" type="text" placeholder="Medicine name" required>
+          <input id="stockOutDrug" type="text" placeholder="Medicine name" required readonly>
         </div>
         <div class="modal-field">
           <label for="stockOutQty">Quantity Removed</label>
-          <input id="stockOutQty" type="number" min="1" required>
+          <input id="stockOutQty" name="quantity" type="number" min="1" required>
         </div>
       </div>
 
@@ -142,7 +157,10 @@
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="stockOutModal">Cancel</button>
-        <button class="btn-add" type="submit">Save Stock Out</button>
+        <button class="btn-add" type="submit" data-loading-text="Saving stock out...">
+          <span class="btn-label">Save Stock Out</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>
@@ -156,10 +174,11 @@
     </div>
 
     <p class="inv-note">Delete <strong id="deleteDrugLabel">this item</strong> from inventory? This action can be connected to a database delete later.</p>
+    <input type="hidden" id="deleteDrugId">
 
     <div class="modal-actions">
       <button class="modal-link-btn" type="button" data-close="deleteDrugModal">Cancel</button>
-      <button class="modal-link-btn modal-danger" type="button" data-close="deleteDrugModal">Delete</button>
+      <button class="modal-link-btn modal-danger" type="button" id="confirmDeleteDrugBtn">Delete</button>
     </div>
   </div>
 </div>

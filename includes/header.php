@@ -1,19 +1,12 @@
+<?php
+$currentUserName = trim((string) ($_SESSION['user_name'] ?? 'Ade Oke'));
+$currentUserFirstName = explode(' ', $currentUserName)[0] ?: $currentUserName;
+$lowStockBadge = isset($dashboardSummary['lowStockAlerts']) ? (int) $dashboardSummary['lowStockAlerts'] . ' low stock alerts' : 'Loading dashboard...';
+?>
 <div class="topbar">
-	<div class="page-title">Good morning, Ade 👋</div>
+	<div class="page-title">Good morning, <?php echo htmlspecialchars($currentUserFirstName); ?> 👋</div>
 	<div class="topbar-right">
-		<div class="badge">3 low stock alerts</div>
-		<button class="btn-add" type="button" id="openSaleModal">
-			<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-			New Sale
-		</button>
-		<button class="btn-add btn-secondary" type="button" id="openDrugModal">
-			<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-			Add Drug
-		</button>
-		<button class="btn-add btn-secondary" type="button" id="openProfileModalTop">
-			<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-			Profile
-		</button>
+		<div class="badge" id="dashboardBadge"><?php echo htmlspecialchars($lowStockBadge); ?></div>
 		<button class="mode-btn" id="modeBtn" type="button" onclick="toggleMode()">🌙 Dark</button>
 	</div>
 </div>

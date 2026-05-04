@@ -341,6 +341,7 @@ body.light-mode {
   font-size: 11px;
   color: var(--color-text-info, #2563eb);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .pt-row {
@@ -384,6 +385,126 @@ body.light-mode {
   border-radius: 20px;
   margin-left: auto;
   flex-shrink: 0;
+  background: var(--color-background-secondary, #f3f4f6);
+  color: var(--color-text-secondary, #374151);
+}
+
+.pt-text-group {
+  flex: 1;
+}
+
+.inline-feedback {
+  border-radius: 12px;
+  border: 0.5px solid var(--color-border-secondary);
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+.inline-feedback.is-success {
+  background: var(--color-background-success);
+  color: var(--color-text-success);
+}
+
+.inline-feedback.is-error {
+  background: var(--color-background-danger);
+  color: var(--color-text-danger);
+}
+
+.empty-state {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  padding: 8px 0;
+}
+
+.dashboard-loading .stat-val {
+  min-height: 24px;
+}
+
+.skeleton-line,
+.skeleton-circle,
+.skeleton-pill {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-background-secondary);
+}
+
+.skeleton-line {
+  display: block;
+  width: 100%;
+  height: 12px;
+  border-radius: 8px;
+}
+
+.skeleton-line.short {
+  width: 58%;
+  margin-top: 8px;
+}
+
+.skeleton-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.skeleton-pill {
+  width: 54px;
+  height: 18px;
+  border-radius: 999px;
+}
+
+.skeleton-line::after,
+.skeleton-circle::after,
+.skeleton-pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: skeleton-shimmer 1.15s infinite;
+}
+
+body.light-mode .skeleton-line::after,
+body.light-mode .skeleton-circle::after,
+body.light-mode .skeleton-pill::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.btn-add,
+.qa-btn {
+  position: relative;
+}
+
+.btn-add.is-loading,
+.qa-btn.is-loading {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: currentColor;
+  animation: btn-spin 0.8s linear infinite;
+}
+
+.btn-secondary .btn-spinner,
+body.light-mode .btn-spinner {
+  border-color: rgba(0, 0, 0, 0.18);
+  border-top-color: currentColor;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .chart-wrap {

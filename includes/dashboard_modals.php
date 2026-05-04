@@ -5,15 +5,15 @@
       <button class="modal-close" type="button" data-close="saleModal" aria-label="Close">×</button>
     </div>
 
-    <form id="saleForm">
+    <form id="saleForm" action="../api/sales.php" method="POST">
       <div class="modal-grid">
         <div class="modal-field">
           <label for="salePatient">Patient</label>
-          <input id="salePatient" type="text" placeholder="Patient name" required>
+          <input id="salePatient" name="patient_name" type="text" placeholder="Patient name" required>
         </div>
         <div class="modal-field">
           <label for="saleType">Sale Type</label>
-          <select id="saleType" required>
+          <select id="saleType" name="sale_type" required>
             <option>Prescription</option>
             <option>OTC</option>
           </select>
@@ -23,22 +23,25 @@
       <div class="modal-grid">
         <div class="modal-field">
           <label for="saleDrug">Drug</label>
-          <input id="saleDrug" type="text" placeholder="Drug name" required>
+          <input id="saleDrug" name="drug_name" type="text" placeholder="Drug name" required>
         </div>
         <div class="modal-field">
           <label for="saleQty">Quantity</label>
-          <input id="saleQty" type="number" min="1" placeholder="1" required>
+          <input id="saleQty" name="quantity" type="number" min="1" placeholder="1" required>
         </div>
       </div>
 
       <div class="modal-field">
         <label for="saleNotes">Notes</label>
-        <textarea id="saleNotes" placeholder="Optional notes"></textarea>
+        <textarea id="saleNotes" name="notes" placeholder="Optional notes"></textarea>
       </div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="saleModal">Cancel</button>
-        <button class="btn-add" type="submit">Save Sale</button>
+        <button class="btn-add" type="submit" data-loading-text="Saving sale...">
+          <span class="btn-label">Save Sale</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>
@@ -51,37 +54,35 @@
       <button class="modal-close" type="button" data-close="drugModal" aria-label="Close">×</button>
     </div>
 
-    <form id="drugForm">
+    <form id="drugForm" action="../api/drugs.php" method="POST">
       <div class="modal-grid">
         <div class="modal-field">
           <label for="drugName">Drug Name</label>
-          <input id="drugName" type="text" placeholder="Medicine name" required>
+          <input id="drugName" name="name" type="text" placeholder="Medicine name" required>
         </div>
         <div class="modal-field">
           <label for="drugCategory">Category</label>
-          <input id="drugCategory" type="text" placeholder="Tablets, syrup, etc." required>
+          <input id="drugCategory" name="category" type="text" placeholder="Tablets, syrup, etc." required>
         </div>
       </div>
 
       <div class="modal-grid">
         <div class="modal-field">
           <label for="drugStock">Stock Qty</label>
-          <input id="drugStock" type="number" min="0" placeholder="0" required>
+          <input id="drugStock" name="stock_qty" type="number" min="0" placeholder="0" required>
         </div>
         <div class="modal-field">
           <label for="drugExpiry">Expiry Date</label>
-          <input id="drugExpiry" type="date" required>
+          <input id="drugExpiry" name="expiry_date" type="date" required>
         </div>
-      </div>
-
-      <div class="modal-field">
-        <label for="drugSupplier">Supplier</label>
-        <input id="drugSupplier" type="text" placeholder="Supplier name">
       </div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="drugModal">Cancel</button>
-        <button class="btn-add" type="submit">Save Drug</button>
+        <button class="btn-add" type="submit" data-loading-text="Saving drug...">
+          <span class="btn-label">Save Drug</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </div>
     </form>
   </div>
