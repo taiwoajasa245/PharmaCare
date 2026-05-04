@@ -3,9 +3,121 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let currentStep = 0;
   let selectedRole = 'pharmacist';
+  const startStep = Number(document.body.dataset.startStep || 0);
 
   const screens   = document.querySelectorAll('.screen');
   const sideSteps = document.querySelectorAll('.side-step');
+  const authForms = document.querySelectorAll('form[action="auth/login.php"], form[action="auth/register.php"]');
+
+  function setButtonLoading(button, isLoading, loadingText) {
+    if (!button) return;
+    const label = button.querySelector('.btn-label');
+    const spinner = button.querySelector('.btn-spinner');
+
+    if (isLoading) {
+      button.disabled = true;
+      button.classList.add('is-loading');
+      if (label) {
+        button.dataset.originalText = label.textContent;
+        label.textContent = loadingText || button.dataset.loadingText || 'Loading...';
+      }
+      if (spinner) spinner.hidden = false;
+      return;
+    }
+
+    button.disabled = false;
+    button.classList.remove('is-loading');
+    if (label && button.dataset.originalText) {
+      label.textContent = button.dataset.originalText;
+    }
+    if (spinner) spinner.hidden = true;
+  }
+
+  function showInlineMessage(form, type, message) {
+    if (!form) return;
+    const target = form.closest('.screen-container, .modal-body');
+    if (!target) return;
+
+    let box = target.querySelector('.form-inline-message');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'form-inline-message';
+      target.insertBefore(box, form);
+    }
+
+    box.classList.remove('is-error', 'is-success', 'is-loading');
+    if (type === 'success') {
+      box.classList.add('is-success');
+    } else if (type === 'loading') {
+      box.classList.add('is-loading');
+    } else {
+      box.classList.add('is-error');
+    }
+    box.textContent = message;
+    box.hidden = false;
+  }
+
+  async function submitAuthForm(form, successMessage, successRedirect) {
+    const button = form.querySelector('button[type="submit"]');
+    const loadingText = button && button.dataset.loadingText ? button.dataset.loadingText : 'Loading...';
+
+    setButtonLoading(button, true, loadingText);
+    showInlineMessage(form, 'loading', loadingText);
+
+    const response = await fetch(form.action, {
+      method: 'POST',
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json'
+      },
+      body: new FormData(form)
+    });
+
+    const payload = await response.json().catch(() => null);
+
+    if (!response.ok || !payload || !payload.success) {
+      const errorMessage = payload && payload.message ? payload.message : 'Something went wrong. Please try again.';
+      showInlineMessage(form, 'error', errorMessage);
+      setButtonLoading(button, false);
+      return;
+    }
+
+    showInlineMessage(form, 'success', payload.message || successMessage);
+    setButtonLoading(button, false);
+
+    if (successRedirect) {
+      window.location.href = payload.redirect || successRedirect;
+    }
+  }
+
+  window.handleSignupSubmit = function (event) {
+    event.preventDefault();
+    const form = event.target;
+    syncHiddenFields();
+    submitAuthForm(form, 'Account created successfully.', '../pages/dashboard.php');
+    return false;
+  };
+
+  window.handleLoginSubmit = function (event) {
+    event.preventDefault();
+    const form = event.target;
+    submitAuthForm(form, 'Signed in successfully.', '../pages/dashboard.php');
+    return false;
+  };
+
+  window.syncHiddenFields = function () {
+    const emailInput = document.getElementById('emailInput');
+    const emailField = document.getElementById('emailField');
+    const roleField = document.getElementById('roleField');
+
+    if (emailInput && emailField) {
+      emailField.value = emailInput.value;
+    }
+
+    if (roleField) {
+      roleField.value = selectedRole;
+    }
+  };
 
   window.goTo = function (next) {
 
@@ -17,7 +129,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (next === 2) {
       document.getElementById('passSub').textContent =
-        'Signing in as ' + cap(selectedRole);
+        'Signing up as ' + cap(selectedRole);
+
+      syncHiddenFields();
     }
 
     screens[currentStep].classList.remove('active');
@@ -38,20 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
     sideSteps[currentStep].classList.add('active');
     sideSteps[currentStep].classList.remove('done');
 
-
-  window.syncHiddenFields = function () {
-    const emailInput = document.getElementById('emailInput');
-    const emailField = document.getElementById('emailField');
-    const roleField = document.getElementById('roleField');
-
-    if (emailInput && emailField) {
-      emailField.value = emailInput.value;
-    }
-
-    if (roleField) {
-      roleField.value = selectedRole;
-    }
-  };
     // Keep step numbers visible as numbers until completed.
     sideSteps.forEach(function (step, index) {
       const num = step.querySelector('.step-num');
@@ -88,6 +188,20 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.classList.add('light');
     modeBtn.textContent = '🌙 Dark mode';
   }
+
+  if (startStep > 0) {
+    goTo(startStep);
+  } else {
+    syncHiddenFields();
+  }
+
+  authForms.forEach(function (form) {
+    const button = form.querySelector('button[type="submit"]');
+    if (button) {
+      const spinner = button.querySelector('.btn-spinner');
+      if (spinner) spinner.hidden = true;
+    }
+  });
 
   // ── Helper: capitalise first letter ──
   function cap(str) {

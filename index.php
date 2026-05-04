@@ -4,7 +4,13 @@ if (isset($_SESSION['user_id'])) {
     header("Location: pages/dashboard.php");
     exit();
 }
-$error = $_GET['error'] ?? '';
+$authMode = $_GET['auth'] ?? 'login';
+$loginError = $_GET['login_error'] ?? '';
+$signupError = $_GET['signup_error'] ?? '';
+$signupSuccess = $_GET['signup_success'] ?? '';
+$startStep = $signupError ? 2 : 0;
+$signupEmail = $_GET['signup_email'] ?? '';
+$signupRole = $_GET['signup_role'] ?? 'pharmacist';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +21,7 @@ $error = $_GET['error'] ?? '';
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/login.css">
 </head>
-<body>
+<body data-start-step="<?= (int) $startStep ?>">
 
 <div class="layout">
 
@@ -55,9 +61,9 @@ $error = $_GET['error'] ?? '';
   <div class="screen active" id="sc-0">
     <div class="screen-container">
       <h1>What's your email address?</h1>
-      <p class="subtitle">We'll use this to find your account.</p>
+      <p class="subtitle">We'll use this to create your account.</p>
       <div class="field-label">Email address</div>
-      <input type="email" id="emailInput" class="field-input" placeholder="you@pharmacare.com"/>
+      <input type="email" id="emailInput" required class="field-input" placeholder="you@pharmacare.com" value="<?= htmlspecialchars($signupEmail) ?>"/>
       <button class="btn-submit" onclick="goTo(1)">Continue</button>
     </div>
   </div>
@@ -90,21 +96,28 @@ $error = $_GET['error'] ?? '';
   <!-- Screen 3: Password -->
   <div class="screen" id="sc-2">
     <div class="screen-container">
-      <h1>Enter your password</h1>
-      <p class="subtitle" id="passSub">Signing in as Pharmacist</p>
+      <h1>Create your password</h1>
+      <p class="subtitle" id="passSub">Signing up as Pharmacist</p>
+
+      <?php if ($signupSuccess): ?>
+        <div class="success-msg"><?= htmlspecialchars($signupSuccess) ?></div>
+      <?php endif; ?>
       
-      <form action="#" method="POST" onsubmit="event.preventDefault(); syncHiddenFields(); goTo(3);">
+      <form action="auth/register.php" method="POST" onsubmit="return handleSignupSubmit(event)">
         <input type="hidden" name="email" id="emailField"/>
-        <input type="hidden" name="role" id="roleField" value="pharmacist"/>
+        <input type="hidden" name="role" id="roleField" value="<?= htmlspecialchars($signupRole) ?>"/>
         
         <div class="field-label">Password</div>
-        <input type="password" name="password" class="field-input" placeholder="••••••••" required/>
+        <input type="password" name="password" class="field-input" placeholder="••••••••" minlength="8" required/>
         
-        <?php if ($error): ?>
-          <div class="error-msg"><?= htmlspecialchars($error) ?></div>
+        <?php if ($signupError): ?>
+          <div class="error-msg"><?= htmlspecialchars($signupError) ?></div>
         <?php endif; ?>
         
-        <button type="submit" class="btn-submit">Sign In</button>
+        <button type="submit" class="btn-submit" data-loading-text="Creating account...">
+          <span class="btn-label">Create account</span>
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
       </form>
       
       <button class="btn-back" onclick="goTo(1)">← Back</button>

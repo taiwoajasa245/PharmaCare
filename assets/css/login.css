@@ -166,7 +166,7 @@ body {
   background: var(--bg2);
   display: flex;
   flex-direction: column;
-  border-radius: 50px;
+  border-radius: 10px;
 }
 
 .topbar {
@@ -328,6 +328,35 @@ input::placeholder {
   margin-top: 12px;
 }
 
+.success-msg,
+.auth-success,
+.form-inline-message {
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 12px;
+}
+
+.success-msg,
+.auth-success,
+.form-inline-message.is-success {
+  color: #86efac;
+  background: #12261a;
+  border: 1px solid #25533a;
+}
+
+.form-inline-message.is-loading {
+  color: var(--text);
+  background: var(--bg3);
+  border: 1px solid var(--border);
+}
+
+.form-inline-message.is-error {
+  color: #fca5a5;
+  background: #2a1a1a;
+  border: 1px solid #5a2020;
+}
+
 /* ── Submit button ── */
 .btn-submit {
   width: 100%;
@@ -341,10 +370,40 @@ input::placeholder {
   cursor: pointer;
   margin-top: 24px;
   transition: opacity 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .btn-submit:hover {
   opacity: 0.88;
+}
+
+.btn-submit:disabled,
+.btn-submit.is-loading {
+  cursor: wait;
+  opacity: 0.75;
+}
+
+.btn-spinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: currentColor;
+  animation: btn-spin 0.8s linear infinite;
+}
+
+body.light .btn-spinner {
+  border-color: rgba(0, 0, 0, 0.18);
+  border-top-color: currentColor;
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Footer ── */
@@ -570,8 +629,57 @@ input::placeholder {
 .modal-logo { margin-bottom: 10px; }
 .modal-logo .logo { font-size: 16px; font-weight: 600; letter-spacing: 0.08em; }
 .modal-body h2 { margin: 6px 0 6px; font-size:18px; color:var(--text); }
+.auth-tabs {
+  display: inline-flex;
+  gap: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px;
+  margin: 6px auto 14px;
+}
+.auth-tab,
+.auth-switch {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+}
+.auth-tab {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.auth-tab.active {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+}
+.auth-error {
+  width: 100%;
+  background: #2a1a1a;
+  border: 1px solid #5a2020;
+  color: #fca5a5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  text-align: left;
+  margin: 0 auto 12px;
+  max-width: 360px;
+}
+.auth-error.is-hidden { display: none; }
+.auth-panel { display: none; }
+.auth-panel.active { display: block; }
+.auth-switch {
+  display: block;
+  margin: 10px auto 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 12px;
+}
 .modal-form { margin-top: 12px; display:flex; flex-direction:column; gap:10px; align-items: center; }
-.modal-form input[type="email"], .modal-form input[type="password"] { padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg3); color:var(--text); width:100%; max-width:360px; }
+.modal-form input[type="email"], .modal-form input[type="password"], .modal-form input[type="text"] { padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--bg3); color:var(--text); width:100%; max-width:360px; }
 .modal-form .btn-submit { margin-top:6px; width:100%; max-width:360px; }
 
 /* Keep field labels left-aligned while form is centered */
@@ -587,6 +695,10 @@ input::placeholder {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+.modal-form input:focus {
+  border-color: var(--accent);
 }
 
 
