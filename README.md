@@ -1,4 +1,4 @@
-# PharmaCare
+# ⚕️ PharmaCare
 
 PharmaCare is a PHP web app with authentication backed by MySQL.
 

@@ -27,7 +27,7 @@ require_once __DIR__ . '/../auth/guard.php';
         <div class="hero-card">
           <div class="hero-copy">
             <h1>Record sales and link prescriptions</h1>
-            <p>Use one page to record drug sales, generate receipts, track daily transactions, and store patient prescriptions tied to sale activity.</p>
+            <p>Record drug sales, track daily transactions, and store patient prescriptions tied to sale activity.</p>
           </div>
           <div class="hero-actions">
             <button class="btn-add btn-secondary" type="button" id="openRecordSaleModalHero">Record Sale</button>
@@ -73,7 +73,7 @@ require_once __DIR__ . '/../auth/guard.php';
           <div class="rx-panel">
             <div class="card-head">
               <div class="card-title">Daily Transactions</div>
-              <span class="card-link">Export</span>
+              <!-- <span class="card-link">Export</span> -->
             </div>
             <div id="transactionsList"></div>
           </div>
@@ -96,10 +96,10 @@ require_once __DIR__ . '/../auth/guard.php';
 
         <div class="inline-feedback" id="patientsFeedback" aria-live="polite" hidden></div>
 
-        <div class="note-card">
+        <!-- <div class="note-card">
           <div class="card-title">Prescription & sales workflow</div>
           <p class="inv-note" style="margin-top:10px;">Every patient action now saves to DB and updates this page instantly.</p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

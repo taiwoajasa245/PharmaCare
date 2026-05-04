@@ -79,45 +79,4 @@ CREATE TABLE IF NOT EXISTS prescriptions (
 	CONSTRAINT fk_prescriptions_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS receipts (
-	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-	patient_name VARCHAR(160) NOT NULL,
-	sale_reference VARCHAR(120) NOT NULL,
-	note TEXT DEFAULT NULL,
-	created_by INT UNSIGNED NULL,
-	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (id),
-	UNIQUE KEY unique_receipts_sale_reference (sale_reference),
-	KEY idx_receipts_patient_name (patient_name),
-	CONSTRAINT fk_receipts_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT IGNORE INTO drugs (name, category, stock_qty, reorder_level, expiry_date) VALUES
-('Paracetamol 500mg', 'Tablets', 180, 40, '2027-02-28'),
-('Amoxicillin 250mg', 'Capsules', 64, 20, '2026-12-31'),
-('Metformin 500mg', 'Tablets', 95, 25, '2027-05-15'),
-('Ibuprofen 200mg', 'Tablets', 22, 30, '2026-10-10'),
-('Vitamin C Syrup', 'Syrups', 48, 15, '2026-09-30');
-
-INSERT IGNORE INTO patients (full_name, phone, last_drug, last_sale_type, last_visit_at, notes) VALUES
-('Fatima Abubakar', '07035551122', 'Paracetamol 500mg', 'Prescription', '2026-05-04 09:10:00', 'Follow-up in two weeks'),
-('Emeka Okonkwo', '08024447788', 'Amoxicillin 250mg', 'Prescription', '2026-05-04 10:15:00', 'Responding well to treatment'),
-('Ngozi Kalu', '08092223344', 'Metformin 500mg', 'Prescription', '2026-05-03 15:30:00', 'Routine refill'),
-('Bola Mustapha', '08030014455', 'Ibuprofen 200mg', 'OTC', '2026-05-03 18:05:00', 'Pain relief consult'),
-('Chinwe Ibe', '08112223344', 'Vitamin C Syrup', 'OTC', '2026-05-02 14:20:00', 'Seasonal wellness');
-
-INSERT IGNORE INTO sales (patient_name, sale_type, drug_name, quantity, notes, sold_by, created_at) VALUES
-('Fatima Abubakar', 'Prescription', 'Paracetamol 500mg', 2, 'Initial relief sale', NULL, '2026-05-04 09:10:00'),
-('Emeka Okonkwo', 'Prescription', 'Amoxicillin 250mg', 1, 'Treatment started', NULL, '2026-05-04 10:15:00'),
-('Ngozi Kalu', 'Prescription', 'Metformin 500mg', 1, 'Monthly refill', NULL, '2026-05-03 15:30:00'),
-('Bola Mustapha', 'OTC', 'Ibuprofen 200mg', 3, 'Pain management', NULL, '2026-05-03 18:05:00'),
-('Chinwe Ibe', 'OTC', 'Vitamin C Syrup', 1, 'Wellness support', NULL, '2026-05-02 14:20:00');
-
-INSERT IGNORE INTO prescriptions (patient_name, drug_name, notes, created_by, created_at) VALUES
-('Fatima Abubakar', 'Paracetamol 500mg', '2 tablets after meals', NULL, '2026-05-04 09:10:00'),
-('Emeka Okonkwo', 'Amoxicillin 250mg', '1 capsule three times daily', NULL, '2026-05-04 10:15:00'),
-('Ngozi Kalu', 'Metformin 500mg', '1 tablet daily after breakfast', NULL, '2026-05-03 15:30:00');
-
-INSERT IGNORE INTO receipts (patient_name, sale_reference, note, created_by, created_at) VALUES
-('Fatima Abubakar', 'SALE-1001', 'Paid in full', NULL, '2026-05-04 09:12:00'),
-('Emeka Okonkwo', 'SALE-1002', 'Pending pickup confirmation', NULL, '2026-05-04 10:17:00');

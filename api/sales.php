@@ -33,7 +33,7 @@ $drug = $drugResult ? $drugResult->fetch_assoc() : null;
 
 if (!$drug) {
 	$database->rollback();
-	jsonResponse(['success' => false, 'message' => 'Select a drug that already exists in the database.'], 404);
+	jsonResponse(['success' => false, 'message' => 'Selected drug not found in inventory.'], 422);
 }
 
 if ((int) $drug['stock_qty'] < $quantity) {

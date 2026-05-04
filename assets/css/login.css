@@ -701,4 +701,57 @@ body.light .btn-spinner {
   border-color: var(--accent);
 }
 
+@media (max-width: 980px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  .main {
+    border-radius: 0;
+  }
+
+  .content {
+    padding: 36px 24px;
+    max-width: none;
+  }
+
+  .screen {
+    padding: 32px 24px;
+  }
+
+  .footer {
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .content h1 {
+    font-size: 22px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+
+  .screen-container {
+    max-width: none;
+  }
+
+  .step::after {
+    display: none;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+}
+
 

@@ -80,7 +80,62 @@ document.addEventListener('DOMContentLoaded', function () {
     if (spinner) spinner.hidden = true;
   }
 
-  function showFeedback(message, type) {
+  function ensureDrugOption(select, value) {
+    if (!select || !value) return;
+    const exists = Array.from(select.options).some(function (option) {
+      return option.value === value;
+    });
+    if (!exists) {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    }
+    select.value = value;
+  }
+
+  function updateDrugSelect(select, items) {
+    if (!select) return;
+    const options = (items || []).map(function (item) {
+      const name = String(item.name || '');
+      return '<option value="' + name.replace(/"/g, '&quot;') + '">' + name + '</option>';
+    }).join('');
+
+    select.innerHTML = '<option value="" disabled selected>Select drug</option>'
+      + (options || '<option value="" disabled>No drugs available</option>');
+  }
+
+  async function loadDrugOptions() {
+    const saleSelect = document.getElementById('saleDrug');
+    const prescriptionSelect = document.getElementById('prescriptionDrug');
+    if (!saleSelect && !prescriptionSelect) return;
+
+    try {
+      const response = await fetch('../api/inventory.php?sort=name_asc', { headers: { Accept: 'application/json' } });
+      const payload = await response.json().catch(function () { return null; });
+
+      if (!response.ok || !payload || !payload.success) {
+        throw new Error(payload && payload.message ? payload.message : 'Unable to load drugs.');
+      }
+
+      updateDrugSelect(saleSelect, payload.items || []);
+      updateDrugSelect(prescriptionSelect, payload.items || []);
+    } catch (error) {
+      showFeedback(error.message || 'Unable to load drugs.', 'error');
+    }
+  }
+
+  function showFeedback(message, type, modalId) {
+    if (modalId) {
+      const errorEl = document.getElementById(modalId + 'Error');
+      if (errorEl) {
+        errorEl.hidden = false;
+        errorEl.classList.remove('is-error', 'is-success');
+        errorEl.classList.add(type === 'error' ? 'is-error' : 'is-success');
+        errorEl.textContent = message;
+        return;
+      }
+    }
     if (!feedbackEl) return;
     feedbackEl.hidden = false;
     feedbackEl.classList.remove('is-error', 'is-success');
@@ -181,7 +236,8 @@ document.addEventListener('DOMContentLoaded', function () {
     setButtonLoading(button, true);
 
     try {
-      const response = await fetch(form.action, {
+      const actionUrl = form.getAttribute('action') || form.action;
+      const response = await fetch(actionUrl, {
         method: 'POST',
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
@@ -195,15 +251,21 @@ document.addEventListener('DOMContentLoaded', function () {
         throw new Error(payload && payload.message ? payload.message : 'Unable to save this action.');
       }
 
-      showFeedback(payload.message || 'Saved successfully.', 'success');
-      closeModal(modalId);
+      showFeedback(payload.message || 'Saved successfully.', 'success', modalId);
       form.reset();
-      await loadPatientsPage();
+      
+      // Force modal close after brief delay to ensure form is reset first
+      setTimeout(function() {
+        closeModal(modalId);
+        loadPatientsPage().catch(function(error) {
+          console.error('Failed to reload patients:', error.message);
+        });
+      }, 300);
       if (typeof window.refreshDashboard === 'function') {
         window.refreshDashboard();
       }
     } catch (error) {
-      showFeedback(error.message || 'Unable to save this action.', 'error');
+      showFeedback(error.message || 'Unable to save this action.', 'error', modalId);
     } finally {
       setButtonLoading(button, false);
     }
@@ -233,6 +295,8 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    const errorEl = document.getElementById(modalId + 'Error');
+    if (errorEl) errorEl.hidden = true;
   }
 
   Object.keys(modalMap).forEach(function (triggerId) {
@@ -308,10 +372,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!result.ok || !result.payload || !result.payload.success) {
           throw new Error(result.payload && result.payload.message ? result.payload.message : 'Unable to update profile.');
         }
-        showFeedback(result.payload.message || 'Profile updated.', 'success');
+        showFeedback(result.payload.message || 'Profile updated.', 'success', 'profileModal');
         closeModal('profileModal');
       }).catch(function (error) {
-        showFeedback(error.message || 'Unable to update profile.', 'error');
+        showFeedback(error.message || 'Unable to update profile.', 'error', 'profileModal');
       }).finally(function () {
         setButtonLoading(button, false);
       });
@@ -332,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const drugField = document.getElementById('saleDrug');
       const notesField = document.getElementById('salePrescription');
       if (patientField) patientField.value = saleBtn.getAttribute('data-patient-name') || '';
-      if (drugField) drugField.value = saleBtn.getAttribute('data-drug-name') || '';
+        if (drugField) ensureDrugOption(drugField, saleBtn.getAttribute('data-drug-name') || '');
       if (notesField) notesField.value = saleBtn.getAttribute('data-notes') || '';
       openModal('saleModal');
       return;
@@ -344,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const drugField = document.getElementById('prescriptionDrug');
       const noteField = document.getElementById('prescriptionNote');
       if (patientField) patientField.value = rxBtn.getAttribute('data-patient-name') || '';
-      if (drugField) drugField.value = rxBtn.getAttribute('data-drug-name') || '';
+        if (drugField) ensureDrugOption(drugField, rxBtn.getAttribute('data-drug-name') || '');
       if (noteField) noteField.value = rxBtn.getAttribute('data-notes') || '';
       openModal('prescriptionModal');
       return;
@@ -366,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const idField = document.getElementById('deletePatientId');
       const id = Number(idField ? idField.value : 0);
       if (!id) {
-        showFeedback('Select a patient to delete.', 'error');
+        showFeedback('Select a patient to delete.', 'error', 'deletePatientModal');
         return;
       }
 
@@ -386,11 +450,15 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(result.payload && result.payload.message ? result.payload.message : 'Unable to delete patient.');
         }
 
-        showFeedback(result.payload.message || 'Patient deleted.', 'success');
-        closeModal('deletePatientModal');
-        return loadPatientsPage();
+        showFeedback(result.payload.message || 'Patient deleted.', 'success', 'deletePatientModal');
+        setTimeout(function () {
+          closeModal('deletePatientModal');
+          loadPatientsPage().catch(function (error) {
+            console.error('Failed to reload patients:', error.message);
+          });
+        }, 300);
       }).catch(function (error) {
-        showFeedback(error.message || 'Unable to delete patient.', 'error');
+        showFeedback(error.message || 'Unable to delete patient.', 'error', 'deletePatientModal');
       });
     });
   }
@@ -398,4 +466,6 @@ document.addEventListener('DOMContentLoaded', function () {
   loadPatientsPage().catch(function (error) {
     showFeedback(error.message || 'Unable to load patient page.', 'error');
   });
+
+  loadDrugOptions();
 });

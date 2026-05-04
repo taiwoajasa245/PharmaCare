@@ -123,6 +123,18 @@ $_SESSION['user_name'] = $fullName;
 $_SESSION['user_email'] = $email;
 $_SESSION['user_role'] = $role;
 
+// Clear application data for a fresh start for this new user.
+// This removes existing inventory, patients, sales, prescriptions and receipts.
+// WARNING: This will erase data for all users in this development environment.
+$clearTables = ['drugs', 'patients', 'sales', 'prescriptions', 'receipts'];
+// Temporarily disable foreign key checks while truncating.
+$database->query('SET FOREIGN_KEY_CHECKS = 0');
+foreach ($clearTables as $t) {
+    // Use TRUNCATE to reset auto-increment counters as well.
+    @$database->query("TRUNCATE TABLE `" . $database->real_escape_string($t) . "`");
+}
+$database->query('SET FOREIGN_KEY_CHECKS = 1');
+
 sendAuthResponse(true, 'Account created successfully.', ['redirect' => '../pages/dashboard.php']);
 header('Location: ../pages/dashboard.php');
 exit();

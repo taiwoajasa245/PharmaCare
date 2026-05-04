@@ -93,6 +93,13 @@ document.addEventListener('DOMContentLoaded', function () {
   window.handleSignupSubmit = function (event) {
     event.preventDefault();
     const form = event.target;
+    // Populate full_name from email if available
+    const emailValue = document.getElementById('emailInput').value || '';
+    const fullNameField = document.getElementById('fullNameField');
+    if (fullNameField && emailValue) {
+      const namePart = emailValue.split('@')[0];
+      fullNameField.value = namePart ? namePart.charAt(0).toUpperCase() + namePart.slice(1) : 'User';
+    }
     syncHiddenFields();
     submitAuthForm(form, 'Account created successfully.', '../pages/dashboard.php');
     return false;

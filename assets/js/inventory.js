@@ -53,7 +53,17 @@ document.addEventListener('DOMContentLoaded', function () {
       .replace(/'/g, '&#039;');
   }
 
-  function showFeedback(message, type) {
+  function showFeedback(message, type, modalId) {
+    if (modalId) {
+      const errorEl = document.getElementById(modalId + 'Error');
+      if (errorEl) {
+        errorEl.hidden = false;
+        errorEl.classList.remove('is-error', 'is-success');
+        errorEl.classList.add(type === 'error' ? 'is-error' : 'is-success');
+        errorEl.textContent = message;
+        return;
+      }
+    }
     if (!feedbackEl) return;
     feedbackEl.hidden = false;
     feedbackEl.classList.remove('is-error', 'is-success');
@@ -151,7 +161,8 @@ document.addEventListener('DOMContentLoaded', function () {
     setButtonLoading(button, true);
 
     try {
-      const response = await fetch(form.action, {
+      const actionUrl = form.getAttribute('action') || form.action;
+      const response = await fetch(actionUrl, {
         method: 'POST',
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
@@ -166,13 +177,19 @@ document.addEventListener('DOMContentLoaded', function () {
         throw new Error(payload && payload.message ? payload.message : 'Unable to save this action.');
       }
 
-      showFeedback(payload.message || 'Saved successfully.', 'success');
-      closeModal(modalId);
+      showFeedback(payload.message || 'Saved successfully.', 'success', modalId);
       form.reset();
       selectedDrug = null;
-      await loadInventory();
+      
+      // Force modal close after brief delay to ensure form is reset first
+      setTimeout(function() {
+        closeModal(modalId);
+        loadInventory().catch(function(error) {
+          console.error('Failed to reload inventory:', error.message);
+        });
+      }, 300);
     } catch (error) {
-      showFeedback(error.message || 'Unable to save this action.', 'error');
+      showFeedback(error.message || 'Unable to save this action.', 'error', modalId);
     } finally {
       setButtonLoading(button, false);
     }
@@ -182,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const deleteDrugIdEl = document.getElementById('deleteDrugId');
     const id = Number(deleteDrugIdEl ? deleteDrugIdEl.value : 0);
     if (!id) {
-      showFeedback('Select a drug to delete.', 'error');
+      showFeedback('Select a drug to delete.', 'error', 'deleteDrugModal');
       return;
     }
 
@@ -197,14 +214,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const payload = await response.json().catch(function () { return null; });
     if (!response.ok || !payload || !payload.success) {
-      showFeedback(payload && payload.message ? payload.message : 'Unable to delete drug.', 'error');
+      showFeedback(payload && payload.message ? payload.message : 'Unable to delete drug.', 'error', 'deleteDrugModal');
       return;
     }
 
-    showFeedback(payload.message || 'Drug deleted successfully.', 'success');
-    closeModal('deleteDrugModal');
+    showFeedback(payload.message || 'Drug deleted successfully.', 'success', 'deleteDrugModal');
     selectedDrug = null;
-    await loadInventory();
+    setTimeout(function () {
+      closeModal('deleteDrugModal');
+      loadInventory().catch(function (error) {
+        console.error('Failed to reload inventory:', error.message);
+      });
+    }, 300);
   }
 
   const modalMap = {
@@ -237,6 +258,8 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    const errorEl = document.getElementById(modalId + 'Error');
+    if (errorEl) errorEl.hidden = true;
   }
 
   Object.keys(modalMap).forEach(function (triggerId) {
@@ -337,10 +360,10 @@ document.addEventListener('DOMContentLoaded', function () {
           throw new Error(result.payload && result.payload.message ? result.payload.message : 'Unable to update profile.');
         }
 
-        showFeedback(result.payload.message || 'Profile updated.', 'success');
+        showFeedback(result.payload.message || 'Profile updated.', 'success', 'profileModal');
         closeModal('profileModal');
       }).catch(function (error) {
-        showFeedback(error.message || 'Unable to update profile.', 'error');
+        showFeedback(error.message || 'Unable to update profile.', 'error', 'profileModal');
       }).finally(function () {
         setButtonLoading(button, false);
       });

@@ -1,16 +1,26 @@
 document.addEventListener('DOMContentLoaded', function () {
   const openIds = {
-    openSaleModal: 'saleModal',
-    openSaleModalQuick: 'saleModal',
-    openSaleModalLink: 'saleModal',
-    openDrugModal: 'drugModal',
+    openSaleModal: 'dashboardSaleModal',
+    openSaleModalQuick: 'dashboardSaleModal',
+    openSaleModalLink: 'dashboardSaleModal',
+    openDrugModal: 'dashboardDrugModal',
     openProfileModal: 'profileModal',
     openProfileModalSidebar: 'profileModal',
     openProfileModalTop: 'profileModal'
   };
   const feedbackEl = document.getElementById('dashboardFeedback');
 
-  function showFeedback(message, type) {
+  function showFeedback(message, type, modalId) {
+    if (modalId) {
+      const errorEl = document.getElementById(modalId + 'Error');
+      if (errorEl) {
+        errorEl.hidden = false;
+        errorEl.classList.remove('is-error', 'is-success');
+        errorEl.classList.add(type === 'error' ? 'is-error' : 'is-success');
+        errorEl.textContent = message;
+        return;
+      }
+    }
     if (!feedbackEl) return;
     feedbackEl.hidden = false;
     feedbackEl.classList.remove('is-error', 'is-success');
@@ -42,6 +52,30 @@ document.addEventListener('DOMContentLoaded', function () {
     if (spinner) spinner.hidden = true;
   }
 
+  async function loadDrugOptions() {
+    const drugSelect = document.getElementById('dashboardSaleDrug');
+    if (!drugSelect) return;
+
+    try {
+      const response = await fetch('../api/inventory.php?sort=name_asc', { headers: { Accept: 'application/json' } });
+      const payload = await response.json().catch(function () { return null; });
+
+      if (!response.ok || !payload || !payload.success) {
+        throw new Error(payload && payload.message ? payload.message : 'Unable to load drugs.');
+      }
+
+      const options = (payload.items || []).map(function (item) {
+        const name = String(item.name || '');
+        return '<option value="' + name.replace(/"/g, '&quot;') + '">' + name + '</option>';
+      }).join('');
+
+      drugSelect.innerHTML = '<option value="" disabled selected>Select drug</option>'
+        + (options || '<option value="" disabled>No drugs available</option>');
+    } catch (error) {
+      showFeedback(error.message || 'Unable to load drugs.', 'error', 'dashboardSaleModal');
+    }
+  }
+
   async function submitForm(form, modalId) {
     const submitButton = form.querySelector('button[type="submit"]');
     setButtonLoading(submitButton, true);
@@ -63,13 +97,16 @@ document.addEventListener('DOMContentLoaded', function () {
         throw new Error(message);
       }
 
-      showFeedback(payload.message || 'Saved successfully.', 'success');
-      closeModal(modalId);
+      showFeedback(payload.message || 'Saved successfully.', 'success', modalId);
       form.reset();
-
-      if (typeof window.refreshDashboard === 'function') {
-        window.refreshDashboard();
-      }
+      
+      // Force modal close after brief delay to ensure form is reset first
+      setTimeout(function() {
+        closeModal(modalId);
+        if (typeof window.refreshDashboard === 'function') {
+          window.refreshDashboard();
+        }
+      }, 300);
 
       if (payload.user) {
         if (payload.user.name) {
@@ -85,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
     } catch (error) {
-      showFeedback(error.message || 'Unable to save right now.', 'error');
+      showFeedback(error.message || 'Unable to save right now.', 'error', modalId);
     } finally {
       setButtonLoading(submitButton, false);
     }
@@ -105,6 +142,8 @@ document.addEventListener('DOMContentLoaded', function () {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    const errorEl = document.getElementById(modalId + 'Error');
+    if (errorEl) errorEl.hidden = true;
   }
 
   Object.keys(openIds).forEach(function (triggerId) {
@@ -144,23 +183,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  const saleForm = document.getElementById('saleForm');
+  const saleForm = document.getElementById('dashboardSaleForm');
   if (saleForm) {
     const spinner = saleForm.querySelector('.btn-spinner');
     if (spinner) spinner.hidden = true;
     saleForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      submitForm(saleForm, 'saleModal');
+      submitForm(saleForm, 'dashboardSaleModal');
     });
   }
 
-  const drugForm = document.getElementById('drugForm');
+  const drugForm = document.getElementById('dashboardDrugForm');
   if (drugForm) {
     const spinner = drugForm.querySelector('.btn-spinner');
     if (spinner) spinner.hidden = true;
     drugForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      submitForm(drugForm, 'drugModal');
+      submitForm(drugForm, 'dashboardDrugModal');
     });
   }
 
@@ -180,4 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
       window.location.href = '../auth/logout.php';
     });
   }
+
+  loadDrugOptions();
 });

@@ -14,7 +14,13 @@
         </div>
         <div class="modal-field">
           <label for="drugCategory">Category</label>
-          <input id="drugCategory" name="category" type="text" placeholder="Tablets, syrup, etc." required>
+          <select id="drugCategory" name="category" required>
+            <option value="" disabled selected>Select category</option>
+            <option>Tablets</option>
+            <option>Syrups</option>
+            <option>Capsules</option>
+            <option>Injection</option>
+          </select>
         </div>
       </div>
 
@@ -30,6 +36,8 @@
       </div>
 
       <input type="hidden" name="reorder_level" value="10">
+
+      <div class="modal-msg is-error" id="addDrugModalError" hidden></div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="addDrugModal">Cancel</button>
@@ -59,7 +67,13 @@
         </div>
         <div class="modal-field">
           <label for="editDrugCategory">Category</label>
-          <input id="editDrugCategory" name="category" type="text" required>
+          <select id="editDrugCategory" name="category" required>
+            <option value="" disabled>Select category</option>
+            <option>Tablets</option>
+            <option>Syrups</option>
+            <option>Capsules</option>
+            <option>Injection</option>
+          </select>
         </div>
       </div>
 
@@ -75,6 +89,8 @@
       </div>
 
       <input type="hidden" name="reorder_level" value="10">
+
+      <div class="modal-msg is-error" id="editDrugModalError" hidden></div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="editDrugModal">Cancel</button>
@@ -112,6 +128,8 @@
         <label for="stockInNote">Notes</label>
         <textarea id="stockInNote" placeholder="Delivery note or batch number"></textarea>
       </div>
+
+      <div class="modal-msg is-error" id="stockInModalError" hidden></div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="stockInModal">Cancel</button>
@@ -155,6 +173,8 @@
         </select>
       </div>
 
+      <div class="modal-msg is-error" id="stockOutModalError" hidden></div>
+
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="stockOutModal">Cancel</button>
         <button class="btn-add" type="submit" data-loading-text="Saving stock out...">
@@ -175,6 +195,8 @@
 
     <p class="inv-note">Delete <strong id="deleteDrugLabel">this item</strong> from inventory? This action can be connected to a database delete later.</p>
     <input type="hidden" id="deleteDrugId">
+
+    <div class="modal-msg is-error" id="deleteDrugModalError" hidden></div>
 
     <div class="modal-actions">
       <button class="modal-link-btn" type="button" data-close="deleteDrugModal">Cancel</button>

@@ -104,7 +104,8 @@ $signupRole = $_GET['signup_role'] ?? 'pharmacist';
       <?php endif; ?>
       
       <form action="auth/register.php" method="POST" onsubmit="return handleSignupSubmit(event)">
-        <input type="hidden" name="email" id="emailField"/>
+        <input type="hidden" name="email" id="emailField" required/>
+        <input type="hidden" name="full_name" id="fullNameField" value="User"/>
         <input type="hidden" name="role" id="roleField" value="<?= htmlspecialchars($signupRole) ?>"/>
         
         <div class="field-label">Password</div>

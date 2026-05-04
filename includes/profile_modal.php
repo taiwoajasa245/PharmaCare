@@ -38,6 +38,8 @@ if ($profileInitials === '') {
         </div>
       </div>
 
+      <div class="modal-msg is-error" id="profileModalError" hidden></div>
+
       <div class="modal-actions" style="justify-content: space-between; flex-wrap: wrap;">
         <button class="modal-link-btn modal-danger" type="button" id="logoutBtn">Logout</button>
         <button class="btn-add" type="submit" data-loading-text="Saving profile...">

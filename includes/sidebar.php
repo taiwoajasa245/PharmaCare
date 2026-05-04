@@ -23,7 +23,7 @@ function navItemClass(string $pageName, string $currentPage): string
 ?>
 
 <aside class="nav">
-	<div class="nav-logo">PharmaCare</div>
+	<div class="nav-logo">⚕️ PharmaCare</div>
 	<div class="nav-section">Main</div>
 	<a class="<?php echo navItemClass('dashboard.php', $currentPage); ?>" href="dashboard.php">
 		<svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>

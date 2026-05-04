@@ -29,7 +29,7 @@ require_once __DIR__ . '/../auth/guard.php';
             <p>Track stock, monitor expiration dates, and keep the pharmacy balanced with add, edit, stock in, stock out, and delete actions that are ready for database wiring.</p>
           </div>
           <div class="hero-actions">
-            <button class="btn-add btn-secondary" type="button" id="openEditDrugModal">Edit Selected</button>
+            <!-- <button class="btn-add btn-secondary" type="button" id="openEditDrugModal">Edit Selected</button> -->
             <button class="btn-add" type="button" id="openAddDrugModalHero">Add Drug ↗</button>
           </div>
         </div>
@@ -117,11 +117,11 @@ require_once __DIR__ . '/../auth/guard.php';
         </div>
 
         <div class="inline-feedback" id="inventoryFeedback" aria-live="polite" hidden></div>
-
+<!-- 
         <div class="card">
           <div class="card-title">Inventory notes</div>
           <p class="inv-note" style="margin-top: 10px;">Inventory actions now save to the database and update this page immediately.</p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

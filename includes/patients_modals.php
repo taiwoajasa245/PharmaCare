@@ -24,7 +24,9 @@
       <div class="modal-grid">
         <div class="modal-field">
           <label for="saleDrug">Drug</label>
-          <input id="saleDrug" name="drug_name" type="text" placeholder="Drug name" required>
+          <select id="saleDrug" name="drug_name" required>
+            <option value="" disabled selected>Select drug</option>
+          </select>
         </div>
         <div class="modal-field">
           <label for="saleQty">Quantity</label>
@@ -36,6 +38,8 @@
         <label for="salePrescription">Linked Prescription</label>
         <input id="salePrescription" name="notes" type="text" placeholder="Prescription ID or note">
       </div>
+
+      <div class="modal-msg is-error" id="saleModalError" hidden></div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="saleModal">Cancel</button>
@@ -64,7 +68,9 @@
         </div>
         <div class="modal-field">
           <label for="prescriptionDrug">Drug / Item</label>
-          <input id="prescriptionDrug" name="drug_name" type="text" placeholder="Prescription items" required>
+          <select id="prescriptionDrug" name="drug_name" required>
+            <option value="" disabled selected>Select drug</option>
+          </select>
         </div>
       </div>
 
@@ -72,6 +78,8 @@
         <label for="prescriptionNote">Notes</label>
         <textarea id="prescriptionNote" name="notes" placeholder="Dosage, directions, notes"></textarea>
       </div>
+
+      <div class="modal-msg is-error" id="prescriptionModalError" hidden></div>
 
       <div class="modal-actions">
         <button class="modal-link-btn" type="button" data-close="prescriptionModal">Cancel</button>
@@ -93,6 +101,8 @@
 
     <p class="inv-note">Delete <strong id="deletePatientLabel">this patient</strong> from records?</p>
     <input type="hidden" id="deletePatientId">
+
+    <div class="modal-msg is-error" id="deletePatientModalError" hidden></div>
 
     <div class="modal-actions">
       <button class="modal-link-btn" type="button" data-close="deletePatientModal">Cancel</button>

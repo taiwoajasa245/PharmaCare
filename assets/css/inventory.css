@@ -468,6 +468,24 @@ body.light-mode {
   color: var(--color-text-danger);
 }
 
+.modal-msg {
+  border-radius: 8px;
+  border: 0.5px solid var(--color-border-secondary);
+  padding: 8px 10px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.modal-msg.is-success {
+  background: var(--color-background-success);
+  color: var(--color-text-success);
+}
+
+.modal-msg.is-error {
+  background: var(--color-background-danger);
+  color: var(--color-text-danger);
+}
+
 .btn-add.is-loading {
   opacity: 0.75;
   cursor: wait;
@@ -608,5 +626,52 @@ body.light-mode .btn-spinner,
   .modal-grid,
   .profile-summary {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    padding: 12px 16px;
+  }
+
+  .scroll {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .hero-card {
+    padding: 16px;
+  }
+
+  .inv-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .inv-table-card {
+    overflow-x: auto;
+  }
+
+  .inv-table {
+    min-width: 720px;
+  }
+
+  .inv-table thead th,
+  .inv-table tbody td {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  .nav {
+    padding: 16px 12px;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .inv-actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
