@@ -4,6 +4,7 @@ CREATE DATABASE IF NOT EXISTS pharmacare
 
 USE pharmacare;
 
+
 -- Auth is the first backed-up feature, so we keep the schema focused on users.
 CREATE TABLE IF NOT EXISTS users (
 	id INT UNSIGNED NOT NULL AUTO_INCREMENT,
