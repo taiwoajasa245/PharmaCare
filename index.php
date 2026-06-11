@@ -42,6 +42,7 @@ $signupRole = $_GET['signup_role'] ?? 'pharmacist';
       <div class="step-num">3</div>
       <span class="step-name">Password</span>
     </div>
+    
     <div class="side-step" id="si-3">
       <div class="step-num">4</div>
       <span class="step-name">Access</span>
